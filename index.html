@@ -13,7 +13,7 @@
 <script>
     console.log("Calling Ping API");
 
-    fetch("http://localhost:3000/api/ping")
+    fetch("https://healthriskcalculatorbackend.azurewebsites.net/api/ping")
         .then(res => res.json())
         .then(data => {
             console.log("Response:", data);
