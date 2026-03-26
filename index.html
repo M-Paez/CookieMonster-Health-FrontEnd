@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Health Risk Calculator</title>
+</head>
+<body>
+
+<!-- Okay just pinging nothing more nothing more-->
+ 
+<h1>Health Risk Calculator</h1>
+<p id="status">Checking server...</p>
+
+<script>
+    console.log("Calling Ping API");
+
+    fetch("http://localhost:3000/api/ping")
+        .then(res => res.json())
+        .then(data => {
+            console.log("Response:", data);
+            document.getElementById("status").innerText = "Server is awake";
+        })
+        .catch(err => {
+            console.log("Error:", err);
+            document.getElementById("status").innerText = "Server not reachable";
+        });
+</script>
+
+</body>
+</html>
