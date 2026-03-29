@@ -4,13 +4,47 @@
     <title>Health Risk Calculator</title>
 </head>
 <body>
-
 <!-- Okay just pinging nothing more nothing more-->
  
-<h1>Health Risk Calculator</h1>
-<p id="status">Checking server...</p>
+    <h1>Health Risk Calculator</h1>
+    <p id="status">Checking server...</p>
+
+    <!-- Form for the inputs-->
+    <form id="riskForm">
+
+        <label>Age:</label>
+        <input type="number" id="age"><br><br>
+
+        <label>Height</label><br>
+        Feet: <input type="number" id="feet" required min="2">
+        Inches: <input type="number" id="inches"  min="0" max="11"><br><br>
+
+        <label>Weight (lbs):</label>
+        <input type="number" id="weight"><br><br>
+
+        <label>Blood Pressure:</label><br>
+        <select id="bp">
+            <option value="normal">Normal</option>
+            <option value="elevated">Elevated</option>
+            <option value="stage 1">Stage 1</option>
+            <option value="stage 2">Stage 2</option>
+            <option value="crisis">Crisis</option>
+        </select><br><br>
+
+        <label>Family History:</label><br>
+        <select id="family">
+            <option value="none">None</option>
+            <option value="diabetes">Diabetes</option>
+            <option value="cancer">Cancer</option>
+            <option value="alzheimer">Alzheimer's</option>
+        </select><br><br>
+
+        <button type="submit">Calculate Risk</button>
+
+        <h2 id="result"></h2>
 
 <script>
+
     console.log("Calling Ping API");
 
     fetch("https://healthriskcalculatorbackend.azurewebsites.net/api/ping")
@@ -23,7 +57,48 @@
             console.log("Error:", err);
             document.getElementById("status").innerText = "Server not reachable";
         });
+
+
+    const form = document.getElementById("riskForm");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+    
+        //Validation
+        const feet = parseInt(document.getElementById("feet").value);
+        if (feet < 2) {
+            alert("Height must be at least 2 feet.");
+            return;
+        }
+
+        const data = {
+            age: document.getElementById("age").value,
+            bmi: "normal",
+            bloodpressure: document.getElementById("bp").value,
+            familydisease: document.getElementById("family").value
+        };
+
+        try {
+            const res = await fetch("https://healthriskcalculatorbackend.azurewebsites.net/risk-calculation", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+            document.getElementById("result").innerText = "Risk: " + result.result;
+
+        } catch (err) {
+        console.log(err);
+        document.getElementById("result").innerText = "Error connecting to server";
+        }
+    });
+
 </script>
 
 </body>
+
+
 </html>
